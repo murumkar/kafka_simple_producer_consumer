@@ -1,0 +1,26 @@
+apply plugin: 'maven-publish'
+
+task sourcesJar(type: Jar) {
+  from project.sourceSets.main.allSource
+}
+
+publishing {
+  repositories {
+    maven {
+      url "http://artifactory.corp.offermatica.com/artifactory/tnt-local-repository/"
+      credentials {
+        username = 'uploader'
+        password = 'm2-rules'
+      }
+    }
+  }
+
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      artifact sourcesJar {
+        classifier "sources"
+      }
+    }
+  }
+}

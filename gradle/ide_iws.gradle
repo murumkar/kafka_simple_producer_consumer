@@ -1,0 +1,54 @@
+apply plugin: 'idea'
+
+idea.workspace.iws.withXml {provider ->
+
+  def workspace = provider.asNode()
+
+  suppressGradleProjectDetection workspace
+  configureTestNg workspace
+}
+
+def suppressGradleProjectDetection(workspace) {
+  def propertiesComponent = findComponent workspace, 'PropertiesComponent'
+  propertiesComponent.appendNode 'property', [name: 'show.inlinked.gradle.project.popup', value: 'false']
+}
+
+def configureTestNg(workspace) {
+  def runManager = findComponent workspace, 'RunManager'
+  def home = System.getenv("HOME")
+  def builder = new NodeBuilder()
+  runManager.append(
+    builder.configuration(default: 'true', type: 'TestNG', factoryName: 'TestNG') {
+      extension(name: "coverage", enabled: "false", merge: "false", sample_coverage: "true", runner: "idea")
+      module(name: "central-server")
+      option(name: "ALTERNATIVE_JRE_PATH_ENABLED", value: "false")
+      option(name: "ALTERNATIVE_JRE_PATH", value: "")
+      option(name: "SUITE_NAME", value: "")
+      option(name: "PACKAGE_NAME")
+      option(name: "MAIN_CLASS_NAME", value: "")
+      option(name: "METHOD_NAME")
+      option(name: "GROUP_NAME", value: "")
+      option(name: "TEST_OBJECT", value: "CLASS")
+      option(name: "VM_PARAMETERS",
+        value: "-Xms200m -Xmx200m -Duser.timezone=EST5EDT " +
+          " -Djava.net.preferIPv4Stack=true -DPROJECT_HOME=~/work/tnt-common-config")
+      option(name: "WORKING_DIRECTORY", value: "")
+      option(name: "OUTPUT_DIRECTORY", value: "")
+      option(name: "ANNOTATION_TYPE")
+      option(name: "ENV_VARIABLES")
+      option(name: "PASS_PARENT_ENVS", value: "true")
+      option(name: "TEST_SEARCH_SCOPE") {
+        value(defaultName: "moduleWithDependencies")
+      }
+      option(name: "USE_DEFAULT_REPORTERS", value: "false")
+      option(name: "PROPERTIES_FILE", value: "")
+      envs {
+        env(name: "PROJECT_HOME", value: "$home/work/tnt-common-config")
+      }
+    }
+  )
+}
+
+def findComponent(workspace, name) {
+  workspace.component.find { it.@name == name }
+}

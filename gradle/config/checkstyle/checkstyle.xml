@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+
+  <module name="RegexpHeader">
+    <property name="headerFile" value="${checkstyle.adobe.header}"/>
+  </module>
+
+  <module name="FileLength">
+    <property name="max" value="475"/>
+  </module>
+
+  <module name="NewlineAtEndOfFile">
+  </module>
+
+  <module name="FileTabCharacter">
+  </module>
+
+  <module name="TreeWalker">
+    <property name="tabWidth" value="2"/>
+
+    <!--<module name="Indentation">-->
+      <!--<property name="basicOffset" value="2"/>-->
+      <!--<property name="caseIndent" value="2"/>-->
+      <!--<property name="throwsIndent" value="2"/>-->
+      <!--<property name="arrayInitIndent" value="2"/>-->
+      <!--<property name="lineWrappingIndentation" value="2"/>-->
+      <!--<property name="forceStrictCondition" value="true"/>-->
+    <!--</module>-->
+
+    <module name="SuppressWarningsHolder"/>
+    <module name="FileContentsHolder"/>
+
+    <module name="MissingOverride"/>
+    <module name="EqualsAvoidNull"/>
+    <module name="ModifiedControlVariable"/>
+
+    <module name="JavadocType">
+      <property name="scope" value="public"/>
+      <property name="authorFormat" value="(Adobe Systems Inc)"/>
+    </module>
+
+    <module name="PackageName">
+      <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+    </module>
+
+    <module name="PackageDeclaration"/>
+    <module name="ConstantName"/>
+    <module name="LocalFinalVariableName"/>
+    <module name="LocalVariableName"/>
+    <module name="MemberName"/>
+    <module name="MethodName"/>
+    <module name="ParameterName"/>
+    <module name="StaticVariableName"/>
+    <module name="TypeName"/>
+    <module name="AvoidStarImport"/>
+    <module name="IllegalImport"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports"/>
+
+    <module name="ImportOrder">
+      <property name="ordered" value="true"/>
+      <property name="separated" value="false"/>
+      <property name="option" value="bottom"/>
+    </module>
+
+    <module name="SuppressWarnings">
+      <property name="format" value="^serial$"/>
+    </module>
+
+    <module name="LineLength">
+      <property name="ignorePattern"
+                value="\$Id|@version|local-extends|query=|signature=|compose=|members=|^import|class="/>
+      <property name="max" value="120"/>
+    </module>
+
+    <module name="AnonInnerLength">
+      <property name="max" value="50"/>
+    </module>
+
+    <module name="MethodLength"/>
+    <module name="EmptyForInitializerPad"/>
+    <module name="EmptyForIteratorPad"/>
+    <module name="GenericWhitespace"/>
+    <module name="ParenPad"/>
+    <module name="TypecastParenPad"/>
+    <module name="WhitespaceAfter"/>
+    <module name="MethodParamPad"/>
+    <module name="NoWhitespaceAfter"/>
+    <module name="NoWhitespaceBefore"/>
+
+    <module name="WhitespaceAround">
+      <property name="tokens"
+                value="ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,EQUAL,GE,GT,LAND,LCURLY,LE,LITERAL_ASSERT,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN"/>
+    </module>
+
+    <module name="ModifierOrder"/>
+    <module name="RedundantModifier"/>
+    <module name="AvoidNestedBlocks"/>
+
+    <module name="EmptyBlock">
+      <property name="tokens"
+                value="LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_IF, LITERAL_FOR, LITERAL_TRY, LITERAL_WHILE, INSTANCE_INIT, STATIC_INIT"/>
+      <property name="option" value="text"/>
+    </module>
+
+    <module name="IllegalTokenText">
+      <property name="tokens" value="NUM_INT,NUM_LONG,NUM_FLOAT,NUM_DOUBLE"/>
+      <property name="format" value="[ldf]"/>
+      <property name="ignoreCase" value="false"/>
+      <property name="message" value="Use capital letters for numeric literals L - long, D - double, F - float"/>
+    </module>
+
+    <module name="LeftCurly"/>
+    <module name="NeedBraces"/>
+    <module name="RightCurly"/>
+    <module name="EmptyStatement"/>
+    <module name="EqualsHashCode"/>
+
+    <module name="HiddenField">
+      <property name="tokens" value="VARIABLE_DEF"/>
+      <property name="ignoreConstructorParameter" value="true"/>
+      <property name="ignoreSetter" value="true"/>
+      <property name="ignoreAbstractMethods" value="true"/>
+    </module>
+
+    <module name="MagicNumber"/>
+    <module name="MissingSwitchDefault"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+    <module name="StringLiteralEquality"/>
+    <module name="DeclarationOrder"/>
+    <module name="BooleanExpressionComplexity"/>
+    <module name="CyclomaticComplexity"/>
+    <module name="FinalClass"/>
+    <module name="HideUtilityClassConstructor"/>
+    <module name="VisibilityModifier"/>
+    <module name="ArrayTypeStyle"/>
+    <module name="InnerTypeLast"/>
+    <module name="MutableException"/>
+
+    <module name="ThrowsCount">
+      <property name="max" value="2"/>
+    </module>
+
+    <module name="CovariantEquals"/>
+    <module name="FallThrough"/>
+    <module name="InnerAssignment"/>
+
+    <module name="NestedForDepth">
+      <property name="max" value="2"/>
+    </module>
+
+    <module name="NestedIfDepth">
+      <property name="max" value="2"/>
+    </module>
+
+    <module name="NestedTryDepth">
+      <property name="max" value="2"/>
+    </module>
+
+    <module name="NoClone"/>
+    <module name="NoFinalizer"/>
+    <module name="SuperClone"/>
+    <module name="SuperFinalize"/>
+    <module name="JavaNCSS"/>
+    <module name="NPathComplexity"/>
+
+    <module name="Regexp">
+      <property name="format" value="((public)|(protected))\s+void\s+finalize\(\s*\)"/>
+      <property name="illegalPattern" value="true"/>
+    </module>
+
+    <module name="ParameterAssignment"/>
+    <module name="ExplicitInitialization"/>
+    <module name="MultipleVariableDeclarations"/>
+    <module name="UnnecessaryParentheses"/>
+    <module name="OneStatementPerLine"/>
+
+    <module name="TodoComment">
+      <property name="format" value="WARNING"/>
+    </module>
+
+    <module name="UpperEll"/>
+    <module name="OuterTypeFilename"/>
+    <!--<module name="TrailingComment"/>-->
+
+    <module name="UncommentedMain">
+      <property name="excludedClasses" value=".*(Tool|Application|Driver).*$"/>
+    </module>
+
+    <module name="ClassTypeParameterName"/>
+    <module name="MethodTypeParameterName"/>
+    <module name="ExecutableStatementCount"/>
+    <module name="MethodCount"/>
+    <module name="OuterTypeNumber"/>
+    <module name="ParameterNumber"/>
+  </module>
+
+  <module name="SuppressionFilter">
+    <property name="file" value="${checkstyle.suppressions.file}"/>
+  </module>
+
+</module>

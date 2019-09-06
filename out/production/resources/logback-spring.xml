@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<springProperty scope="context" name="filePath" source="log.file.path"/>
+	<springProperty scope="context" name="fileSize" source="log.file.size"/>
+	<springProperty scope="context" name="maxIndex" source="log.file.maxIndex"/>
+	<!--maxIndex cannot be more than 20. 
+	See FixedWindowRollingPolicy in the link https://logback.qos.ch/manual/appenders.html for further information-->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				%gray(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%5p) %magenta(${PID:- }) %gray(--- [%thread]) %cyan(%-40.40logger{39}) : %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${filePath}</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%thread] %-40.40logger{39} : %msg%n
+			</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${filePath}.%i</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>${maxIndex}</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>${fileSize}</maxFileSize>
+		</triggeringPolicy>
+	</appender>
+	<logger name="com.adobe.ids" additivity="false" level="info">
+		<!--appender-ref ref="console" /-->
+		<appender-ref ref="file" />
+	</logger>
+	<logger name="org.apache.kafka" additivity="false" level="info">
+		<!--appender-ref ref="console" /-->
+		<appender-ref ref="file" />
+	</logger>
+	<logger name="io.confluent.kafka.serializers" additivity="false" level="info">
+		<!--appender-ref ref="console" /-->
+		<appender-ref ref="file" />
+	</logger>
+	<logger name="io.confluent.monitoring.clients.interceptor" additivity="false" level="info">
+		<!--appender-ref ref="console" /-->
+		<appender-ref ref="file" />
+	</logger>
+</configuration>

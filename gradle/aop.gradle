@@ -1,0 +1,48 @@
+apply plugin: 'java'
+
+configurations {
+  aspectjtools
+  aspectLibs
+}
+
+dependencies {
+  aspectjtools TOOLS.aspectjtools
+}
+
+compileJava {
+  actions = []
+  project.gradle.projectsEvaluated {
+    inputs.files(project.sourceSets.main.java.srcDirs)
+    outputs.dir(project.sourceSets.main.output.classesDir)
+  }
+
+  doLast {
+    compile(project)
+  }
+}
+
+def compile(def project) {
+  def dirs = project.sourceSets.main.java.srcDirs.findAll {
+    it.exists()
+  }
+
+  ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+    classpath: project.configurations.aspectjtools.asPath)
+
+  ant.iajc(
+    maxmem: "2048m", fork: "true", debug: "off",
+    showWeaveInfo: "off", deprecation: "on",
+    classpath: project.sourceSets.main.compileClasspath.asPath,
+    destDir: project.sourceSets.main.output.classesDir.absolutePath,
+    aspectPath: project.configurations.aspectLibs.asPath,
+    source: project.sourceCompatibility,
+    target: project.targetCompatibility,
+    verbose: "false"
+  ) {
+    sourceroots {
+      dirs.each {
+        pathelement(location: it.absolutePath)
+      }
+    }
+  }
+}

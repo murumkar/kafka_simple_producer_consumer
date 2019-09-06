@@ -1,0 +1,113 @@
+
+ext.projectHome = file('.')
+apply from: "$projectHome/config/libs.gradle"
+apply from: "$projectHome/gradle/ide_ipr.gradle"
+apply from: "$projectHome/gradle/ide_iws.gradle"
+
+defaultTasks 'build'
+
+buildscript {
+  repositories {
+    ivy {
+      url "http://artifactory.corp.offermatica.com/artifactory/target-gradle-plugin"
+    }
+    mavenCentral()
+  }
+  dependencies {
+    dependencies {
+      classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+      classpath 'com.adobe.target.build:target-code-style:1.5.+'
+    }
+  }
+}
+
+group = 'com.adobe.ids'
+version = "${versionMajor}.${versionMinor}"
+
+repositories {
+  maven {
+    url 'http://artifactory.corp.offermatica.com/artifactory/tnt-repository'
+  }
+  maven { 
+    url 'http://packages.confluent.io/maven/' 
+  }
+  mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+apply plugin: 'idea'
+apply plugin: 'target-code-style'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply from: "$projectHome/gradle/publish.gradle"
+apply from: "$projectHome/gradle/aop.gradle"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+springBoot {
+  mainClass = "com.adobe.ids.CanaryApplication"
+}
+
+tasks.withType(FindBugs) {
+  effort = 'max'
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+checkstyle {
+  configProperties.adobeHeaderFile = rootProject.file('gradle/config/checkstyle/checkstyle.adobe.header')
+  configProperties.suppressionsFile = rootProject.file('gradle/config/checkstyle/suppressions.xml')
+  configProperties.maxLineLength = 120
+  configProperties.strictIndentation = true
+  configProperties.maxFileLength = 500
+}
+
+pmd {
+  ruleSetFiles = files("${projectHome}/gradle/config/pmd/ruleset.xml")
+}
+
+configurations {
+  all*.exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+test {
+  useTestNG()
+
+  beforeTest { descriptor ->
+    logger.lifecycle("Running test: " + descriptor)
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'config/libs', include: '*.jar')
+  LIBS.with {
+    compile commonsCollections, commonsLang, guava, spring, springBoot, jackson, logging, metrics, slf4j, findBugs
+    compile httpClient, aspectj, jolokia, kafkaClient
+    runtime aspectjweaver
+    testCompile testng, springBootTest
+  }
+}
+
+wrapper {
+  gradleVersion = '2.14'
+}
+
+String configurationSourceProperty = "-Darchaius.configurationSource.additionalUrls=file://"
+if (System.getenv('SPRING_PROFILES_ACTIVE') != null
+  && System.getenv('SPRING_PROFILES_ACTIVE').split(',').contains("dev")) {
+  applicationDefaultJvmArgs.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=12500")
+  configurationSourceProperty += "$projectHome/config.properties"
+  applicationDefaultJvmArgs.add(configurationSourceProperty)
+  applicationDefaultJvmArgs.add("-Darchaius.fixedDelayPollingScheduler.delayMills=15000")
+}
+
+allprojects {
+  tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+  }
+}
